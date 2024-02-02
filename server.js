@@ -2,6 +2,14 @@
 const inquirer = require("inquirer");
 const mysql = require('mysql2');
 const cTable = require('console.table');
+const express = require("express");
+
+const PORT = process.env.PORT || 3001;
+const app = express();
+
+// Express middleware
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Connect to the database
 const db = mysql.createConnection({
@@ -9,18 +17,9 @@ const db = mysql.createConnection({
   user: 'root',
   password: 'April162022!',
   database: 'employee_db'
-});
-
-// Start the server & app
-db.connect(function(err) {
-    if (err) throw err;
-    console.log("You are Connected");
-    initApp();
-});
-
-
-
-
+},
+console.log(`Connected to the employees db.`)
+);
 
 
 // Start the app
@@ -70,19 +69,22 @@ const initApp = () => {
 
 //declaring a fucntion to view all employees
 function viewAllEmployees() {
-    db.query('SELECT * FROM employee', (err, results) => {
-        if (err) {
-            throw err;
-        } else {
-            console.table(results);
-            initApp();
-        }
-    });
+    const query = "SELECT * FROM employee";
+    db.query(query, (err, results) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(results);
+      console.table(results);
+      initApp();
+    })
 };
 
 //decalring a function to add an employee record
 function addEmployee() {
-    inquirer.prompt({
+    inquirer.prompt([
+    {
         type: "input",
         message: "What is the name of the first name of the employee you want to add?",
         name: "fName"
@@ -101,35 +103,38 @@ function addEmployee() {
         type: "input",
         message: "What is the manager id number?",
         name: "managerID"
-    })
+    }])
     .then(answer => {
-        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.fName, answer.lName, answer.roleID, answer.managerID], 
-            function (err, res) {
-                if (err) {
-                throw err;
-            } else {
-                console.table(res);
-                initApp();
-            }
+      const query = "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)"; 
+      const endValue = [answer.fName, answer.lName, answer.roleID, answer.managerID];
+      db.query(query, endValue, (err, results) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+          initApp();
           });
     });
 };
 
 //decarling function to view all roles
 function viewAllRoles() {
-    db.query('SELECT * FROM role', (err, results) => {
-        if (err) {
-            throw err;
-        } else {
-            console.table(results);
-            initApp();
-        }
-    });
-};
+  const query = "SELECT * FROM role";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(results);
+    console.table(results);
+    initApp();
+  });
+}
 
 //decalring function to add a role
 function addRole() {
-    inquirer.prompt({
+    inquirer.prompt([
+    {
         type: "input",
         message: "What is the name of the role you want to add?",
         name: "NameofRole"
@@ -143,12 +148,18 @@ function addRole() {
         type: "input",
         message: "What department does this role fall under?",
         name: "DepartmentName"
-    })
+    },
+  ])
     .then(answer => {
-        db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.NameofRole, answer.SalaryAmount, answer.DepartmentName], function(err, res) {
-            if (err) throw err;
-            console.table(res);
-            initApp();
+      const query =
+      "INSERT INTO role (title, salary, department) VALUES (?, ?, ?)"; 
+      const endValue = [answer.NameofRole, answer.SalaryAmount, answer.DepartmentName];
+      db.query(query, endValue, (err, results) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+          initApp();
           });
     });
 };
@@ -192,3 +203,7 @@ function quit() {
     process.exit();
 };
 
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+    initApp();
+  });
