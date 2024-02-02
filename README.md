@@ -18,7 +18,7 @@ Installations required for this project: node.js & mysql2
 To use this project invoke the application with either 'npm start' or 'node server.js'. After the server and database have kicked off, use the up and down arrows to select what you like to do / view. Once you have completed everything you want to do, select quit to exit.
 
 ## Deploy Video
-
+<video src="Untitled_%20Feb%202,%202024%202_46%20PM.mp4" controls title="Title"></video>
 
 ## Questions
 
