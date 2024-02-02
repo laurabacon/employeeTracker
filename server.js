@@ -1,6 +1,7 @@
 // Dependencies
 const inquirer = require("inquirer");
 const mysql = require('mysql2');
+const cTable = require('console.table');
 
 // Connect to the database
 const db = mysql.createConnection({
@@ -11,10 +12,16 @@ const db = mysql.createConnection({
 });
 
 // Start the server & app
-db.connect(() => {
-  console.log(`Server running on port ${db}`);
-  initApp();
+db.connect(function(err) {
+    if (err) throw err;
+    console.log("You are Connected");
+    initApp();
 });
+
+
+
+
+
 
 // Start the app
 const initApp = () => {
@@ -68,7 +75,7 @@ function viewAllEmployees() {
             throw err;
         } else {
             console.table(results);
-            startScreen();
+            initApp();
         }
     });
 };
@@ -102,7 +109,7 @@ function addEmployee() {
                 throw err;
             } else {
                 console.table(res);
-                startScreen();
+                initApp();
             }
           });
     });
@@ -115,7 +122,7 @@ function viewAllRoles() {
             throw err;
         } else {
             console.table(results);
-            startScreen();
+            initApp();
         }
     });
 };
@@ -141,7 +148,7 @@ function addRole() {
         db.query("INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", [answer.NameofRole, answer.SalaryAmount, answer.DepartmentName], function(err, res) {
             if (err) throw err;
             console.table(res);
-            startScreen();
+            initApp();
           });
     });
 };
@@ -153,7 +160,7 @@ function viewAllDepartment() {
             throw err;
         } else {
             console.table(results);
-            startScreen();
+            initApp();
         }
     });
 };
@@ -174,7 +181,7 @@ function addDepartment() {
                 throw err;
             } else {
                 console.table(res);
-                startScreen();
+                initApp();
             }
         });
     });
