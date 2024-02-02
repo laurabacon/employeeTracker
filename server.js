@@ -76,7 +76,14 @@ const initApp = () => {
 
 //declaring a fucntion to view all employees
 function viewAllEmployees() {
-
+    db.query('SELECT * FROM employee', (err, results) => {
+        if (err) {
+            throw err;
+        } else {
+            console.table(results);
+            startScreen();
+        }
+    });
 };
 
 //decalring a function to add an employee record
@@ -91,7 +98,14 @@ function updateEmployee() {
 
 //decarling function to view all roles
 function viewAllRoles() {
-
+    db.query('SELECT * FROM role', (err, results) => {
+        if (err) {
+            throw err;
+        } else {
+            console.table(results);
+            startScreen();
+        }
+    });
 };
 
 //decalring function to add a role
@@ -101,7 +115,14 @@ function addRole() {
 
 //declaring function to view all departments
 function viewAllDepartment() {
-
+    db.query('SELECT * FROM department', (err, results) => {
+        if (err) {
+            throw err;
+        } else {
+            console.table(results);
+            startScreen();
+        }
+    });
 };
 
 //declaring function to add a department
@@ -109,5 +130,8 @@ function addDepartment() {
 
 };
 
-
+function quit() {
+    db.end();
+    process.exit();
+};
 
