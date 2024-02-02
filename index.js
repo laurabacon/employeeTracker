@@ -43,9 +43,6 @@ const initApp = () => {
       case "Add Employee":
         addEmployee();
         break;
-      case "Update Employee Role":
-        updateEmployee();
-        break;
       case "View All Roles":
         viewAllRoles();
         break;
@@ -99,7 +96,7 @@ function addEmployee() {
         name: "managerID"
     })
     .then(answer => {
-        db.query("INSERT INTO role (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.fName, answer.lName, answer.roleID, answer.managerID], 
+        db.query("INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [answer.fName, answer.lName, answer.roleID, answer.managerID], 
             function (err, res) {
                 if (err) {
                 throw err;
